@@ -124,6 +124,43 @@ Or for specific IDs:
 python -m scripts.generate_sample_images --ids 1 2 3 --out samples/images/frames_dewarped
 ```
 
+
+## Data Formats
+
+- GPS_FOLDER (example: `GPS/` or your own path)
+  - Contains one CSV per video: `<video_basename>_GoPro Max-GPS5.csv`
+  - Required columns (headers):
+    - `GPS (Long.) [deg]`
+    - `GPS (Lat.) [deg]`
+  - One row per frame, in chronological order; row index is treated as `frame_number`.
+  - Example sample file: `samples/GPS/GH010001_GoPro Max-GPS5.csv`.
+
+- VIDEO_ROOT_DIR (example: `videos/` or your own path)
+  - Contains video files with basenames matching `matched_file` (from the match step).
+  - Supported extensions: `.mp4`, `.MP4`, `.mov`, `.MOV` (also tries GH/GL name swaps).
+  - Example expected names: `GH010001.mp4` or `GH010001.MOV`.
+
+- Footprints CSV (input to `match`)
+  - Must contain longitude/latitude columns; auto-detected from common names:
+    - (`long`,`lat`) or (`longitude`,`latitude`) or (`x`,`y`) or (`Center_Longitude`,`Center_Latitude`).
+  - Example: `samples/csv/sample_footprints.csv`.
+
+- Matches CSV (output of `match`; input to `extract`/`orient`)
+  - Required columns:
+    - `ObjectId`, `Center_Longitude`, `Center_Latitude`, `vehicle_x`, `vehicle_y`, `matched_file`, `frame_number`.
+  - Example: `samples/csv/sample_matches.csv`.
+
+- Orientation CSV (output of `orient`; input to `dewarp`/`vlm`)
+  - Same as Matches CSV plus `orientation` column.
+  - Example: `samples/csv/sample_matches_orientation.csv`.
+
+Directory placeholders included in this repo:
+
+```
+GPS/            # place your real GPS CSVs here (or point to your own folder)
+videos/         # place your videos here (or point to your own folder)
+```
+
 ## APIs
 
 Set environment variables (your own OpenAI API keys) before using `videoprocessing.vision` or `vlm`:
