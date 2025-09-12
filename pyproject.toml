@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vrtoolkit"
+version = "0.1.0"
+description = "Frame-number-based video processing pipeline: spatial match, extract, orientation, dewarp, VLM."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Urban Resilience", email = "noreply@example.com" }]
+license = { text = "Proprietary" }
+dependencies = [
+  "pandas",
+  "geopandas",
+  "shapely",
+  "pyproj",
+  "Pillow",
+  "openai",
+  "scikit-learn",
+  "matplotlib",
+]
+
+[project.scripts]
+vrtoolkit = "vrtoolkit.cli:main"
+
+[tool.setuptools]
+packages = ["vrtoolkit", "scripts"]
+
