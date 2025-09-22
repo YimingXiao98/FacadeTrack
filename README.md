@@ -203,8 +203,3 @@ export OPENAI_TEXT_MODEL=gpt-4o
 - The VLM stage can run in two modes (one‑stage vs two‑stage). Choose based on recall needs and operating conservatism.
 
 
-### Cite
-
-Y. Xiao, A. Gupta, M. Esparza, Y.-H. Ho, A. Sebastian, H. Weas, R. Houck, and A. Mostafavi, “FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery,” submitted manuscript, 2025.
-
-If you use this code, please cite the paper above.
