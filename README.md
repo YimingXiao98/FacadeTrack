@@ -1,6 +1,6 @@
 ﻿# FacadeTrack — Street‑Level Occupancy Inference Toolkit
 
-FacadeTrack is a lightweight, modular toolkit that implements the end‑to‑end street‑level pipeline described in the manuscript “Automated Post‑disaster Recovery Monitoring from Street View Imagery via Vision‑Language Reasoning.” It converts panoramic drive‑through video + GPS into rectified facade views and uses a vision‑language pipeline to infer parcel‑level occupancy with interpretable attributes and change analysis.
+FacadeTrack is a lightweight, modular toolkit that implements the end‑to‑end street‑level pipeline described in the paper *FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery*. It converts panoramic drive‑through video + GPS into rectified facade views and uses a vision‑language pipeline to infer parcel‑level occupancy with interpretable attributes and change analysis.
 
 ## What This Toolkit Provides
 
@@ -39,11 +39,6 @@ FacadeTrack is a lightweight, modular toolkit that implements the end‑to‑end
   - Cohen’s κ: one‑stage 0.789, two‑stage 0.818
 - McNemar and paired bootstrap tests indicated differences were not statistically significant at the current operating point, but the two‑stage mode better matched net recovery counts in change analysis.
 
-### Cite
-
-Y. Xiao, A. Gupta, M. Esparza, Y.-H. Ho, A. Sebastian, H. Weas, R. Houck, and A. Mostafavi, “FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery,” submitted manuscript, 2025.
-
-If you use this code, please cite the paper above.
 
 ## Install
 
@@ -133,6 +128,7 @@ python -m cli vlm matched_filtered_buildings_orientation.csv ./frames_dewarped .
 ## Samples
 
 See `samples/`:
+
 - Example CSVs in `samples/csv/` show required columns for various stages.
 - Place example images as `<ObjectId>.jpg` under `samples/images/frames_dewarped/` to test the VLM pipeline:
 
@@ -144,13 +140,13 @@ python -m cli vlm samples/csv/sample_matches_orientation.csv samples/images/fram
 
 You can generate placeholder images (so you can run the VLM pipeline without real imagery) using:
 
-```
+```python
 python -m scripts.generate_sample_images --csv samples/csv/sample_matches_orientation.csv --id-col ObjectId --out samples/images/frames_dewarped
 ```
 
 Or for specific IDs:
 
-```
+```python
 python -m scripts.generate_sample_images --ids 1 2 3 --out samples/images/frames_dewarped
 ```
 
@@ -185,7 +181,7 @@ python -m scripts.generate_sample_images --ids 1 2 3 --out samples/images/frames
 
 Directory placeholders included in this repo:
 
-```
+```bash
 GPS/            # place your real GPS CSVs here (or point to your own folder)
 videos/         # place your videos here (or point to your own folder)
 ```
@@ -206,8 +202,9 @@ export OPENAI_TEXT_MODEL=gpt-4o
 - Column names are normalized where feasible; otherwise errors are explicit.
 - The VLM stage can run in two modes (one‑stage vs two‑stage). Choose based on recall needs and operating conservatism.
 
-## FAQ
 
-- Why street‑level? Facade and access cues (entries, placards, mud lines, repairs, vehicles) drive habitability decisions and are often missed by nadir views.
-- Do I need real images to try it? No — use `scripts/generate_sample_images.py` to create placeholders and exercise the full pipeline.
-- How do I reproduce paper‑style change classes? Produce per‑visit labels (V1, V2) with the same strategy and join on parcel IDs; then map to Stable/Recovered/Deteriorated as in the paper.
+### Cite
+
+Y. Xiao, A. Gupta, M. Esparza, Y.-H. Ho, A. Sebastian, H. Weas, R. Houck, and A. Mostafavi, “FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery,” submitted manuscript, 2025.
+
+If you use this code, please cite the paper above.
