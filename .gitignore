@@ -1,4 +1,4 @@
-# Python
+﻿# Python
 __pycache__/
 *.pyc
 *.pyo
@@ -29,5 +29,6 @@ building_occupancy_result/
 .env
 
 # Others
-.pdf
+*.pdf
+
 

@@ -1,17 +1,49 @@
-# Video Processing Toolkit
+﻿# FacadeTrack — Street‑Level Occupancy Inference Toolkit
 
-This repository organizes the functionality from the original notebook into a small Python package with clear modules and a CLI.
+FacadeTrack is a lightweight, modular toolkit that implements the end‑to‑end street‑level pipeline described in the manuscript “Automated Post‑disaster Recovery Monitoring from Street View Imagery via Vision‑Language Reasoning.” It converts panoramic drive‑through video + GPS into rectified facade views and uses a vision‑language pipeline to infer parcel‑level occupancy with interpretable attributes and change analysis.
 
-## Overview
+## What This Toolkit Provides
 
-- `vrtoolkit/spatial_matching.py`: Match footprints to GPS tracks (frame-number based).
-- `vrtoolkit/frame_extraction.py`: Extract frames with FFmpeg.
-- `vrtoolkit/orientation.py`: Compute vehicle orientations per building.
-- `vrtoolkit/dewarp.py`: Dewarp frames to center the target building.
-- `vrtoolkit/vision.py`: OpenAI helpers (no keys hardcoded; uses env vars).
-- `vrtoolkit/VLMpipeline.py`: VLM occupancy pipeline (script + callable function).
-- `vrtoolkit/cli.py`: Command-line interface.
-- `samples/`: Example CSVs and empty image folders to illustrate structure.
+- Street‑level data prep: match building footprints to GPS, extract video frames, estimate heading, and dewarp panoramic frames to facade‑centered views.
+- Interpretable VLM pipeline: elicits nine human‑readable attributes from each facade image and applies decision logic to output Occupied/Not Occupied.
+- Two operating modes: a transparent one‑stage rule and a conservative two‑stage (vision + reasoning) strategy, consistent with the paper.
+- Change analysis ready: produce per‑visit labels that can be aggregated into Recovered / Deteriorated / Stable classes.
+
+## Components
+
+- `vrtoolkit/spatial_matching.py` — Match footprints to GPS tracks (frame‑number based).
+- `vrtoolkit/frame_extraction.py` — Extract frames with FFmpeg.
+- `vrtoolkit/orientation.py` — Estimate vehicle heading per matched frame.
+- `vrtoolkit/dewarp.py` — Dewarp panoramic frames to facade‑centered rectilinear views.
+- `vrtoolkit/vision.py` — Vision‑language helpers (uses env vars for keys/models).
+- `vrtoolkit/VLMpipeline.py` — Attribute extraction + decision logic (one‑stage and two‑stage).
+- `vrtoolkit/cli.py` — Command‑line interface wiring the steps.
+- `samples/` — Minimal CSVs and image stubs for quick trial.
+
+## Paper Summary
+
+- Goal: infer post‑disaster building occupancy at parcel scale from street‑view imagery with interpretable evidence and change tracking.
+- Method: fuse street‑level, facade‑rectified views with a vision‑language prompt that outputs nine attributes, then decide Occupied/Not Occupied via either a simple scoring rule (one‑stage) or a conservative text‑reasoning step (two‑stage).
+- Why it helps: nadir imagery misses facade/access cues; this street‑level, language‑guided pipeline surfaces those cues and explains decisions with intermediate attributes.
+
+### Key Attributes
+
+`house_destruction, structural_damage, exterior_debris, open_doors_windows, site_accessible, exterior_mud, emergency_markings, major_repairs, vehicle_presence`
+
+### Results Snapshot
+
+- Not Occupied treated as positive class. On the evaluation set, the two‑stage strategy showed higher recall and agreement with a modest precision trade‑off:
+  - Precision: one‑stage 0.943, two‑stage 0.927
+  - Recall: one‑stage 0.728, two‑stage 0.781
+  - F1: one‑stage 0.822, two‑stage 0.848
+  - Cohen’s κ: one‑stage 0.789, two‑stage 0.818
+- McNemar and paired bootstrap tests indicated differences were not statistically significant at the current operating point, but the two‑stage mode better matched net recovery counts in change analysis.
+
+### Cite
+
+Y. Xiao, A. Gupta, M. Esparza, Y.-H. Ho, A. Sebastian, H. Weas, R. Houck, and A. Mostafavi, “FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery,” submitted manuscript, 2025.
+
+If you use this code, please cite the paper above.
 
 ## Install
 
@@ -19,8 +51,6 @@ This repository organizes the functionality from the original notebook into a sm
 - Python:
 
 ```bash
-python -m venv .venv
-. .venv/bin/activate   # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 ```
 
@@ -124,7 +154,6 @@ Or for specific IDs:
 python -m scripts.generate_sample_images --ids 1 2 3 --out samples/images/frames_dewarped
 ```
 
-
 ## Data Formats
 
 - GPS_FOLDER (example: `GPS/` or your own path)
@@ -173,5 +202,12 @@ export OPENAI_TEXT_MODEL=gpt-4o
 
 ## Notes
 
-- Frame-number-based processing avoids timestamp drift.
+- Frame‑number‑based processing avoids timestamp drift.
 - Column names are normalized where feasible; otherwise errors are explicit.
+- The VLM stage can run in two modes (one‑stage vs two‑stage). Choose based on recall needs and operating conservatism.
+
+## FAQ
+
+- Why street‑level? Facade and access cues (entries, placards, mud lines, repairs, vehicles) drive habitability decisions and are often missed by nadir views.
+- Do I need real images to try it? No — use `scripts/generate_sample_images.py` to create placeholders and exercise the full pipeline.
+- How do I reproduce paper‑style change classes? Produce per‑visit labels (V1, V2) with the same strategy and join on parcel IDs; then map to Stable/Recovered/Deteriorated as in the paper.
