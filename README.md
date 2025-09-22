@@ -1,6 +1,6 @@
 ﻿# FacadeTrack — Street‑Level Occupancy Inference Toolkit
 
-FacadeTrack is a lightweight, modular toolkit that implements the end‑to‑end street‑level pipeline described in the paper *FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery*. It converts panoramic drive‑through video + GPS into rectified facade views and uses a vision‑language pipeline to infer parcel‑level occupancy with interpretable attributes and change analysis.
+FacadeTrack is a lightweight, modular toolkit that implements the end‑to‑end street‑level pipeline described in the paper ***FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery***. It converts panoramic drive‑through video + GPS into rectified facade views and uses a vision‑language pipeline to infer parcel‑level occupancy with interpretable attributes and change analysis.
 
 ## What This Toolkit Provides
 
@@ -203,8 +203,3 @@ export OPENAI_TEXT_MODEL=gpt-4o
 - The VLM stage can run in two modes (one‑stage vs two‑stage). Choose based on recall needs and operating conservatism.
 
 
-### Cite
-
-Y. Xiao, A. Gupta, M. Esparza, Y.-H. Ho, A. Sebastian, H. Weas, R. Houck, and A. Mostafavi, “FacadeTrack: Linking Street View Imagery and Language Models for Post-Disaster Recovery,” submitted manuscript, 2025.
-
-If you use this code, please cite the paper above.
